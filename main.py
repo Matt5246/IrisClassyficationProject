@@ -99,3 +99,4 @@ print("Najlepsze hiperparametry dla modelu SVM:", grid_search_svm.best_params_)
 print("Najlepsza dokładność:", grid_search_svm.best_score_)
 
 # Krok 9: Dokumentacja
+
