@@ -83,9 +83,21 @@ for i, feature in enumerate(feature_names):
 
 # Przeprowadźmy walidację krzyżową dla modelu SVM
 scores_svm = cross_val_score(model_svm, X, y, cv=5)
-print("Wyniki walidacji krzyżowej dla modelu SVM:")
+print("\nWyniki walidacji krzyżowej dla modelu SVM:")
 print(scores_svm)
-print("Średnia dokładność:", scores_svm.mean())
+print("\nŚrednia dokładność:", scores_svm.mean())
+
+# Walidacja krzyżowa dla modelu KNN
+scores_knn = cross_val_score(model_knn, X, y, cv=5)
+print("\nWyniki walidacji krzyżowej dla modelu KNN:")
+print(scores_knn)
+print("\nŚrednia dokładność:", scores_knn.mean())
+
+# Walidacja krzyżowa dla modelu Random Forest
+scores_rf = cross_val_score(model_rf, X, y, cv=5)
+print("\nWyniki walidacji krzyżowej dla modelu Random Forest:")
+print(scores_rf)
+print("\nŚrednia dokładność:", scores_rf.mean())
 
 # Krok 8: Optymalizacja modelu (opcjonalne)
 
@@ -94,9 +106,25 @@ param_grid = {'C': [0.1, 1, 10, 100]}
 grid_search_svm = GridSearchCV(model_svm, param_grid, cv=5)
 grid_search_svm.fit(X, y)
 
+# Optymalizacja modelu KNN
+param_grid_knn = {'n_neighbors': [3, 5, 7, 9, 11]}
+grid_search_knn = GridSearchCV(model_knn, param_grid_knn, cv=5)
+grid_search_knn.fit(X, y)
+
+# Optymalizacja modelu Random Forest
+param_grid_rf = {'n_estimators': [50, 100, 200, 300]}
+grid_search_rf = GridSearchCV(model_rf, param_grid_rf, cv=5)
+grid_search_rf.fit(X, y)
+
 # Wyświetlenie najlepszych hiperparametrów
 print("Najlepsze hiperparametry dla modelu SVM:", grid_search_svm.best_params_)
 print("Najlepsza dokładność:", grid_search_svm.best_score_)
+
+print("Najlepsze hiperparametry dla modelu KNN:", grid_search_knn.best_params_)
+print("Najlepsza dokładność dla modelu KNN:", grid_search_knn.best_score_)
+
+print("Najlepsze hiperparametry dla modelu Random Forest:", grid_search_rf.best_params_)
+print("Najlepsza dokładność dla modelu Random Forest:", grid_search_rf.best_score_)
 
 # Krok 9: Dokumentacja
 
