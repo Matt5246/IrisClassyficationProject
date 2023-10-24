@@ -13,19 +13,22 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.datasets import load_iris
 from sklearn.model_selection import GridSearchCV
-
+from sklearn.metrics import precision_score
+from sklearn import metrics
 
 # Krok 1: Przygotowanie danych
+# data = load_iris()
 data = pd.read_csv('./Iris.csv')
 X = data.drop('Species', axis=1)
+X= X.drop('Id', axis=1)
 y = data['Species']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,train_size=0.75, random_state=42)
 # Load the Iris dataset
-iris = load_iris()
+
 
 
 # Krok 2: Eksploracja danych
-print("Data inside Iris.csv only 5 rows:\n",data.head())
+print("Data inside Iris.csv only 5 rows:\n",X.head())
 print("\nInformation about dataset:\n",data.describe())
 sns.set(style="ticks")
 sns.pairplot(sns.load_dataset("iris"), hue="species", markers=["o", "s", "D"], palette='Dark2')
@@ -59,7 +62,7 @@ print("Dokładność klasyfikacji SVM:", accuracy_score(y_test, y_pred_svm))
 y_pred_rf = model_rf.predict(X_test)
 print("Dokładność klasyfikacji Random Forest:", accuracy_score(y_test, y_pred_rf))
 
-from sklearn import metrics
+
 print("\naccuracy for model knn:")
 print(metrics.classification_report(y_test, y_pred_knn, digits=3))
 print("accuracy for model SVM:")
@@ -79,7 +82,7 @@ print("Wpływ cech na klasyfikację:")
 for i, feature in enumerate(feature_names):
     print(f"{feature}: {coef[0][i]}")
 
-# Krok 7: Walidacja krzyżowa (opcjonalne)
+# Krok 7: Walidacja krzyżowa
 
 # Przeprowadźmy walidację krzyżową dla modelu SVM
 scores_svm = cross_val_score(model_svm, X, y, cv=5)
@@ -99,7 +102,7 @@ print("\nWyniki walidacji krzyżowej dla modelu Random Forest:")
 print(scores_rf)
 print("\nŚrednia dokładność:", scores_rf.mean())
 
-# Krok 8: Optymalizacja modelu (opcjonalne)
+# Krok 8: Optymalizacja modelu
 
 # Możemy eksperymentować z różnymi parametrami modelu, na przykład parametrem C w przypadku SVM.
 param_grid = {'C': [0.1, 1, 10, 100]}
@@ -126,5 +129,5 @@ print("Najlepsza dokładność dla modelu KNN:", grid_search_knn.best_score_)
 print("Najlepsze hiperparametry dla modelu Random Forest:", grid_search_rf.best_params_)
 print("Najlepsza dokładność dla modelu Random Forest:", grid_search_rf.best_score_)
 
-# Krok 9: Dokumentacja
+
 
