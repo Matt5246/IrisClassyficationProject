@@ -11,6 +11,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn import metrics
+import argparse
+
+# Wprowadzenie wartości argumentu
+test_size = input("Podaj rozmiar zbioru testowego (domyślnie 0.25): ")
+if test_size == "":
+    test_size = 0.25
+else:
+    test_size = float(test_size)
+    if test_size <= 0 or test_size >= 1:
+        print("Błąd: Wprowadzona wartość jest poza zakresem (0, 1). Używana zostanie wartość domyślna (0.25).")
+        test_size = 0.25
 
 # Krok 1: Przygotowanie danych
 # data = load_iris()
