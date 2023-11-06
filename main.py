@@ -2,28 +2,23 @@
 # Importowanie niezbędnych bibliotek
 
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.datasets import load_iris
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import precision_score
 from sklearn import metrics
 
 # Krok 1: Przygotowanie danych
 # data = load_iris()
 data = pd.read_csv('./Iris.csv')
 X = data.drop('Species', axis=1)
-X= X.drop('Id', axis=1)
+X = X.drop('Id', axis=1)
 y = data['Species']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,train_size=0.75, random_state=42)
-# Load the Iris dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,train_size=0.75, random_state=5)
 
 
 
@@ -35,7 +30,6 @@ sns.pairplot(sns.load_dataset("iris"), hue="species", markers=["o", "s", "D"], p
 plt.show()
 
 # Krok 3: Wybór modelu
-# Rozważ modele K-nearest neighbors (KNN), Support Vector Machines (SVM) i Random Forests
 
 # Krok 4: Trenowanie modelu
 
@@ -44,7 +38,6 @@ model_svm = SVC(kernel='linear', C=1)
 model_rf = RandomForestClassifier(n_estimators=100)
 
 # Trenowanie modeli
-#pierwszy model
 model_knn.fit(X_train, y_train)
 model_svm.fit(X_train, y_train)
 model_rf.fit(X_train, y_train)
@@ -69,18 +62,24 @@ print("accuracy for model SVM:")
 print(metrics.classification_report(y_test, y_pred_svm, digits=3))
 print("accuracy for model random forest:")
 print(metrics.classification_report(y_test, y_pred_rf, digits=3))
+
+
 # Krok 6: Interpretacja wyników
 
-# W tym przypadku zakładamy, że model SVM jest wybranym modelem i chcemy zrozumieć, które cechy miały największy wpływ na klasyfikację.
-# W modelu SVM istnieje coś takiego jak współczynniki cech (coef_), które wskazują na wpływ każdej cechy na decyzje modelu.
+# W tym przypadku zakładamy, że model KNN jest wybranym modelem i chcemy zrozumieć, które cechy miały największy wpływ na klasyfikację.
+# Model KNN nie dostarcza bezpośrednich współczynników cech, więc będziemy oceniać wpływ cech na podstawie ich istotności w kontekście najbliższych sąsiadów.
 
-coef = model_svm.coef_
-feature_names = X.columns
+# Obliczanie istotności cech w modelu KNN
+feature_importances = model_knn.kneighbors(X_train, n_neighbors=7, return_distance=False)
+feature_importances = feature_importances.sum(axis=1) / 7  # Obliczenie średniej istotności
+
+# Tworzenie słownika z nazwami cech i ich istotnościami
+feature_importance_dict = dict(zip(X_train.columns, feature_importances))
 
 # Wyświetlenie wpływu cech na klasyfikację
-print("Wpływ cech na klasyfikację:")
-for i, feature in enumerate(feature_names):
-    print(f"{feature}: {coef[0][i]}")
+print("Wpływ cech na klasyfikację (na podstawie istotności w modelu KNN):")
+for feature, importance in feature_importance_dict.items():
+    print(f"{feature}: {importance:.4f}")
 
 # Krok 7: Walidacja krzyżowa
 
